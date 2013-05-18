@@ -40,7 +40,7 @@ interface Topology<O> {
 	public Iterator<Point> getPointIterator(O target);
 
 	/**
-	 * Returns point that matches a position on target.
+	 * Returns iterator for points that matches a position on target.
 	 * This is intended as a ways for interface and
 	 * model to interact so that points can be
 	 * interactively moved.
@@ -52,7 +52,7 @@ interface Topology<O> {
 	 * @return
 	 * 			The point matching the position on the annotation target.
 	 */
-	public Point getPointAt(O target, int pos);
+	public Iterator<Point> getPointAt(O target, int pos);
 
 	/**
 	 * Adds a new point to the Topology.

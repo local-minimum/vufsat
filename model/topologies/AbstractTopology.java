@@ -6,10 +6,7 @@ import model.Model
 
 abstract class AbstractTopology<O> implements Topology<O> {
 
-	private final static int MAX_POINTS = 1;
-
-	private int numberOfChildTopologies = 0;
-	private int numberOfPoints = 0;
+	private String caption = "";
 
 	private Collection<Topology> childTopologies = new ArrayList(1);
 	private Collection<Point> points = new ArrayList(1);
@@ -22,35 +19,17 @@ abstract class AbstractTopology<O> implements Topology<O> {
 		m.addTopology(this);
 	}
 
-	/**
-	 * Returns an iterator for all subpopologies
-	 *
-	 * @return
-	 * 			Iterator
-	 */
+	@Override
 	public Iterator<Topology> getChildIterator() {
 		return childTopologies.iterator();
 	}
 
-	/**
-	 * Returns an iterator for all points
-	 *
-	 * @return
-	 * 			Iterator
-	 */
+	@Override
 	public Iterator<Point> getPointIterator() {
 		return points.iterator();
 	}
 
-	/**
-	 * Returns an iterator for only those point annotating a specifc
-	 * object.
-	 *
-	 * @param obj
-	 * 			The object the points should annotate
-	 * @return
-	 * 			Iterator for the points
-	 */
+	@Override
 	public Iterator<Point> getPointIterator(O obj) {
 
 		new Collection<Point> filteredPoints = new ArrayList(1);
@@ -65,21 +44,8 @@ abstract class AbstractTopology<O> implements Topology<O> {
 		return filteredPoints.iterator();
 	}
 
-	/**
-	 * Returns a point at a specific position along the object
-	 * belonging to this particular topology.
-	 *
-	 * FIXIT: If there are no points a null is returned.
-	 * FIXIT: If there are multiple points valid, only one is returned
-	 *
-	 * @param target
-	 * 			The annotated object (e.g. sequence)
-	 * @param pos
-	 * 			The position along the target
-	 * @return
-	 * 			The point at the position
-	 */
-	public Point getPointAt(O target, int pos) {
+	@Override
+	public Iterator<Point> getPointAt(O target, int pos) {
 
 		new Collection<Point> filteredPoints = new ArrayList(1);
 
@@ -92,5 +58,56 @@ abstract class AbstractTopology<O> implements Topology<O> {
 
 		return filteredPoints.iterator();
 
+	}
+
+	@Override
+	public boolean addPoint(Point p) {
+
+		//Defualt behaviour is to allow 
+		return points.add(p);
+	}
+
+	@Override
+	public boolean removePoint(Point p) {
+
+		//Defualt behaviour is to allow 
+		return points.remove(p);
+
+	}
+
+	@Override
+	public boolean addTopology(Topology top) {
+
+		//Defualt behaviour is to allow 
+		return topologies.add(top);
+
+	}
+
+	@Override
+	public boolean removeTopology(Topology top) {
+
+		//Defualt behaviour is to allow 
+		return topologies.remove(top);
+
+	}
+
+	@Override
+	public void setCaption(String s) {
+
+		caption = s;
+
+	}
+
+	@Override
+	public String getCaption() {
+
+		return caption;
+
+	}
+
+	@Override
+	public boolean allowMove(Point p, int pos) {
+
+		return true;
 	}
 }
