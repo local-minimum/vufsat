@@ -29,6 +29,7 @@ final public class Point {
 	private Topology topology;
 	private ModelObject target;
 	private int pos;
+	private int stepSize = 2;
 	
 	/**
 	 * Alternate constructor that also places
@@ -45,7 +46,39 @@ final public class Point {
 	}
 
 	/**
-	 * @return The position of the point on the annotee
+	 * Alternate constructor that also places
+	 * the point on the target
+	 *
+	 * @param target
+	 * 			The annotee
+	 * @param top
+	 * 			The topology that uses the point
+	 * @param pos
+	 * 			The position along the target
+	 * @param stepSize
+	 *			Only positive values and values less than target size allowed
+	 *			One means it will step "on", "between", "on", "between".
+	 *			Two means it will step "on", "on", "on" (or on betweens)
+	 */
+	public Point(ModelObject target, Topology top, int pos, int stepSize) {
+		this.target = target;
+		this.topology = top;
+		this.pos = pos;
+		if (stepSize < 1) {
+			throws new IllegalArgumentException(
+					"Negative stepSize not allowed");
+		} else if (stepSize >= target.getSize()) {
+			throws new IllegalArgumentException(
+					"stepSize larger than target");
+		}
+		this.stepSize = stepSize;
+	}
+
+	/**
+	 * Gets the position in model-space
+	 *
+	 * @return
+	 * 			The position of the point on the annotee
 	 */
 	public int getPos() {
 		return this.pos;
@@ -53,10 +86,23 @@ final public class Point {
 	}
 
 	/**
+	 * Checks if position is an inbetween position or not
+	 *
+	 * @return
+	 * 			If it is inbetween
+	 */
+	public boolean getIsInbetween() {
+		returns ((getPos() % 2) == 0);
+	}
+
+	/**
 	 * Sets a new position if allowed
 	 *
-	 * @param int: New position
-	 * @return Success-value
+	 * @param int
+	 * 			New position
+	 * @return
+	 * 			Success-value
+	 * 
 	 */
 	public boolean setPos(int p) {
 		p = checkWarp(p);
