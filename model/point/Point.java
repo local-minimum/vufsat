@@ -35,9 +35,12 @@ final public class Point {
 	 * Alternate constructor that also places
 	 * the point on the target
 	 *
-	 * @param target: The annotee
-	 * @param top: The topology that uses the point
-	 * @param pos: The position along the target
+	 * @param target
+	 * 			The annotee
+	 * @param top
+	 * 			The topology that uses the point
+	 * @param pos
+	 * 			The position along the target
 	 */
 	public Point(ModelObject target, Topology top, int pos) {
 		this.target = target;
@@ -83,6 +86,17 @@ final public class Point {
 	public int getPos() {
 		return this.pos;
 
+	}
+
+	/**
+	 * Gets the target
+	 *
+	 * @return
+	 * 			The target
+	 */
+	public ModelObject getTarget() {
+
+		return target;
 	}
 
 	/**

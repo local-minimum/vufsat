@@ -12,6 +12,14 @@ import model.ModelObject;
 
 public abstract class PrototypeModelObject implements ModelObject {
 
+	/** Physical Shape */
+	enum PhysicalShape {
+		/** Physical Shape: Linear Sequence */
+		MODE_LINEAR,
+		/** Physical Shape: Circular Sequence */
+		MODE_CIRCULAR;
+	}
+
 	private static boolean modelUpdateRunning = false;
 	private static Collection<Integer> modelUpdatingObjects = new HashSet<Integer>();
 	private static Collection<Integer> identifiers = new HashSet<Integer>();

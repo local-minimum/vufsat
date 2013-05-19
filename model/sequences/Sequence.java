@@ -4,8 +4,11 @@ package model;
 import java.util.*;
 import java.lang.Math;
 
-import model.Annotation;
-import model.PrototypeModelObject;
+import model.annotation.Annotation;
+import model.modelobject.PrototypeModelObject;
+import model.point.Point;
+import model.topologies.Singularity
+import model.Model;
 
 public class Sequence extends PrototypeModelObject {
 
@@ -19,22 +22,139 @@ public class Sequence extends PrototypeModelObject {
 		TYPE_NUCLEOTIDE;
 	}
 
-	/** Physical Shape */
-	enum PhysicalShape {
-		/** Physical Shape: Linear Sequence */
-		MODE_LINEAR,
-		/** Physical Shape: Circular Sequence */
-		MODE_CIRCULAR;
-	}
+	/** Reading Frames for nucleotide to amino acid comparisons.
+	 *
+	 * <code>PLUS_ONE</code> should be the default usage if the idea
+	 * of reading frame is not neccesary (such as comparing sizes.
+	 *
+	 * <code>NO_FRAME</code> will void any arithemic or logic based
+	 * on reading frames.
+	 */
+	enum ReadingFrame {
+		/** Negative direction, offset two steps to the left of the last
+		 * nucleotide.
+		 */
+		MINUS_TRHEE (-3),
+		/** Negative direction, offset one step to the left of the last
+		 * nucleotide.
+		 */
+		MINUS_TWO (-2),
+		/** Negative direction, starting at the last nucleotide */
+		MINUS_ONE (-1),
+		/** No frame enumeration will void/block any reading frame
+		 * interpretation logic and arithemtic.
+		 */
+		NO_FRAME (0),
+		/** Positive direction, starting at the first nucleotide */
+		PLUS_ONE (1),
+		/** Positive direction, starting at the second nucleotide */
+		PLUS_TWO (2),
+		/** Positive direction, starting at the thrid nucleotide */
+		PLUS_THREE (3);
 
-	/** Conversion factor for nucleotides to amino acids */
-	private static final int NT_TO_AA_RATIO = 3;
+		/** Stores the reading frame value */
+		private int readingFrame;
+
+		/** Constructor assigning reading frame value */
+		public ReadingFrame(int rf) {
+		
+			this.readingFrame = rf;
+			
+		}
+
+		/**
+		 * Gets the value of the reading frame
+		 *
+		 * @return
+		 * 			The value of the reading frame
+		 */
+		public int getFrame() {
+
+			return readingFrame;
+		}
+	]
+
+	class SequenceWalker implements Iterator {
+
+		/** Walking distance each iteration */
+		private int step = 2;
+
+		/** The slice size */
+		private int sliceSize = 1;
+
+		/** The treatment of incomplete slices (the last one if any) */
+		private boolean allowIncomplete = false;
+
+		/** The current point */
+		private int curPos = 1;
+
+		/** The starting point */
+		private int startPos = 1;
+
+		/** The next postion as a point*/
+		private Point nextPos;
+		//private Integer nextPos = new Integer();
+
+		private void initNextPoint() {
+
+			Orphan top = new Orphan();
+			nextPoint = new Point(Sequence, top, 1);
+		}
+
+		SequenceWalker(int pos) {
+			this.pos = pos;
+			this.startPos = pos;
+			initNextPoint();
+		}
+
+		SequenceWalker(int pos, int step) {
+			this.pos = pos;
+			this.startPos = pos;
+
+			if (step == 0) {
+				throw new IllegalArgumentException("Steps must be non-zero");
+			}
+			this.step = step;
+
+			initNextPoint();
+		}
+
+		public boolean hasNext() {
+
+			nextPos = curPos + step;
+			if (nextPos < 0 &&
+					Sequence.physicalShape.equals(
+						Sequence.PhysicalShape.MODE_LINEAR)) {
+
+				return false;
+			} else if (nextPos < 0 &&
+					Sequence.physicalShape.equals(
+						Sequence.PhysicalShape.MODE_CIRCULAR)) {
+
+				nextPos = 
+
+		}
+
+		public String next() {
+
+		}
+
+		public void remove() {
+
+			throws new UnsupportedOperationException(
+					"Removing not allowed");
+
+		}
+	}
 
 	/** The instance's type of sequence (nucleotide or amino acid) */
 	private SequenceType sequenceType = sequenceType.TYPE_UNKNOWN;
 
 	/** The instance's physical shape type (cirular or linear) */
 	private PhysicalShape physicalShape = PhysicalShape.MODE_LINEAR;
+
+	/** The model it belongs to */
+	private Model model;
 
 	/** The actual sequence-text */
 	private String sequence;
@@ -68,100 +188,6 @@ public class Sequence extends PrototypeModelObject {
 	public int getSize() {
 		int val = physicalShape.equals(PhysicalShape.MODE_LINEAR) ? 1: 0;
 		return sequence.length() * 2 + val;
-	}
-
-	/**
-	 * Converts a model-value for the present sequence type
-	 * into any other sequence type value.
-	 * 
-	 * Conversion from <code>SequenceType.TYPE_AMINOACID</code>
-	 * into <code>SequenceType.TYPE_NUCLEOTIDE</code> for positions
-	 * will give the starting nucleotide of the triplet forming the
-	 * aminoacid as the position for <i>On</i> positions and the position
-	 * between the last nucleotide of the preceeding triplet and the first
-	 * nucleotide of the current triplet as the <i>Between</i> position.
-	 *
-	 * Conversion from <code>SequenceType.TYPE_NUCLEOTIDE</code> into
-	 * <code>sequenceType.TYPE_AMINOACID</code> will for <i>On</i> positions
-	 * give the same amino acid position for any of the three nucleotide
-	 * positions comprising the amino acid position. For <i>Inbetween</i>
-	 * positions 
-	 *
-	 * No other conversions are implemented at this stage
-	 *
-	 * @param toType
-	 * 			The type of sequence to convert value into
-	 * @param val
-	 * 			The value to convert
-	 * @return
-	 * 			Corresponding value for a sequence to the <code>toType</code>
-	 */
-	private int valueConvert(SequenceType toType, int val) {
-
-		if (sequenceType == toType) {
-
-			return val;
-
-		} else if (sequenceType.equals(SequenceType.TYPE_UNKNOWN)) {
-
-			throws new IllegalStateException(
-				"Conversion not supported when sequence type is %s".format(
-					sequenceType.name()));
-
-		} else if (toType.equals(SequenceType.TYPE_UNKNOWN)) {
-
-			throws new ArithmeticException(
-					"Cannot convert values into %s".format(
-						toType.name()));
-		}
-
-
-		if (sequenceType.equals(SequenceType.TYPE_NUCLEOTIDE) &&
-				toType.equals(SequenceType.TYPE_AMINOACID)) {
-
-		} else if (sequenceType.equals(SequenceType.TYPE_AMINOACID) &&
-				toType.equals(SequenceType.TYPE_NUCLEOTIDE)) {
-
-		} else {
-
-			throws new ArithmeticException(
-					"Conversion from %s into %s not implemented".format(
-						sequenceType.name(), toType.name()));
-
-		}
-	}
-
-	/**
-	 * Returns the size converted as if sequence was amino acids
-	 * If sequence is nucleotide and sequence length is not a multiple of
-	 * three, the amino acid length will be rounded up.
-	 *
-	 * @return
-	 * 			The animo acid version size
-	 */
-	public int getSizeAsAminoAcid() {
-
-		int val = physicalShape.equals(PhysicalShape.MODE_LINEAR) ? 1: 0;
-
-		if (sequenceType.equals(SequenceType.TYPE_AMINOACID)) {
-			return getSize();
-		} else if (sequenceType.equals(SequenceType.TYPE_NUCLEOTIDE)) {
-			return ((int) (sequence.length() / NT_TO_AA_RATIO)) * 2 + val;
-		} else {
-			throws new IllegalStateException(
-				"Operation not supported for sequence type %s".format(
-					sequenceType.name()));
-		}
-	}
-
-	public int getSizeAsNucleotide() {
-		if (sequenceType == TYPE_NUCLEOTIDE) {
-			return getSize();
-		} else if (sequenceType == TYPE_AMINOACID) {
-			return getSize() * AA_TO_NT;
-		} else {
-			return -1;
-		}
 	}
 
 }

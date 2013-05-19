@@ -108,6 +108,10 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	@Override
 	public boolean allowMove(Point p, int pos) {
 
+		int wrappedPos = p.checkWarp(pos);
+		ModelObject target = p.getTarget();
+
+
 		return true;
 	}
 }

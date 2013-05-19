@@ -1,0 +1,13 @@
+
+NEXT THING
+----------
+
+Move the Circular vs Linear to the most basic model-object thing
+(is it the interface or the abstract class)
+
+Make default allowMove for topology to check if next pos is being wrapped
+and if so make sure the shapeType is CIRCULAR
+
+Make the sequence walker iterator use the nextPos point to check if move next 
+segment is allowed (both start and stop)
+
