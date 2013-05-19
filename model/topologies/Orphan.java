@@ -1,5 +1,6 @@
 package model.topologies;
 
+
 public class Orphan extends AbstractTopology {
 
 	/**
@@ -7,7 +8,7 @@ public class Orphan extends AbstractTopology {
 	 * this constructor should not invoke super
 	 */
 	public Orphan() {
-
+		//Important not to call super()
 	}
 
 }

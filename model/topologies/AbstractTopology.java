@@ -15,6 +15,10 @@ abstract class AbstractTopology implements Topology<ModelObject> {
 
 	protected Model model;
 
+	public AbstractTopology() {
+
+	}
+
 	public AbstractTopology(Model m) {
 
 		model = m;
