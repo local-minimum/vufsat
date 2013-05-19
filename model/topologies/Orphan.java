@@ -1,6 +1,6 @@
 package model.topologies;
 
-class Orphan extends AbstractTopology {
+public class Orphan extends AbstractTopology {
 
 	/**
 	 * As the super constructor registers the tolology at the model

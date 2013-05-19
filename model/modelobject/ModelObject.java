@@ -34,7 +34,7 @@ public interface ModelObject {
 	 */
 	public boolean allowWrap();
 
-	public ArrayList<ModelObject> getChildren();
+	//public ArrayList<ModelObject> getChildren();
 	public void setUpdatingObject(int id);
 	public void setFinishedUpdatingObject(int id);
 	public boolean setIdentifier(int id);

@@ -18,7 +18,7 @@ import model.topologies.Topology;
  * An alignment instance works as a grouping for unified styling. Thus
  * alignments can be split and unified by moving features between instances.
  */
-interface Annotation {
+public interface Annotation {
 
 	/**
 	 * getAnnotates

@@ -7,7 +7,7 @@ import java.lang.Math;
 import model.annotation.Annotation;
 import model.modelobject.PrototypeModelObject;
 import model.point.Point;
-import model.topologies.Singularity;
+import model.topologies.Orphan;
 import model.Model;
 
 public class Sequence extends PrototypeModelObject {
@@ -56,7 +56,7 @@ public class Sequence extends PrototypeModelObject {
 		private int readingFrame;
 
 		/** Constructor assigning reading frame value */
-		public ReadingFrame(int rf) {
+		ReadingFrame(int rf) {
 		
 			this.readingFrame = rf;
 			
@@ -102,13 +102,13 @@ public class Sequence extends PrototypeModelObject {
 
 		SequenceWalker(int pos) {
 			setStartPos(pos);
-			this.nextSlize = new StringBuilder(this.sliceSize);
+			this.nextSlice = new StringBuilder(this.sliceSize);
 			initTestPoint();
 		}
 
 		SequenceWalker(int pos, int step) {
 			setStartPos(pos);
-			this.nextSlize = new StringBuilder(this.sliceSize);
+			this.nextSlice= new StringBuilder(this.sliceSize);
 			setStep(step);
 			initTestPoint();
 		}
@@ -122,7 +122,7 @@ public class Sequence extends PrototypeModelObject {
 			}
 			this.sliceSize = sliceSize;
 			this.allowIncomplete = allowIncomplete;
-			this.nextSlize = new StringBuilder(this.sliceSize);
+			this.nextSlice= new StringBuilder(this.sliceSize);
 
 			initTestPoint();
 
@@ -132,7 +132,7 @@ public class Sequence extends PrototypeModelObject {
 		private void initTestPoint() {
 
 			Orphan top = new Orphan();
-			testPoint = new Point(Sequence, top, 1, step);
+			testPoint = new Point(Sequence.this, top, 1, step);
 		}
 
 
@@ -142,7 +142,7 @@ public class Sequence extends PrototypeModelObject {
 				throw new IllegalArgumentException(
 						"Positions must be on (odd), not between (even)");
 			}
-			this.pos = pos;
+			this.curPos = pos;
 			this.startPos = pos;
 
 		}
@@ -186,9 +186,9 @@ public class Sequence extends PrototypeModelObject {
 						break;
 
 					} else {
-						nextSlice.append(Sequence.getCharAt(testPoint));
+						nextSlice.append(Sequence.this.getCharAt(testPoint));
 					}
-					prevPos = curPos.getPos();
+					prevPos = testPoint.getPos();
 				}
 			}
 
@@ -198,7 +198,7 @@ public class Sequence extends PrototypeModelObject {
 		public boolean hasNext() {
 
 			if (!nextIsSet) {
-				setNextSlizePoints();
+				setNextSlize();
 			}
 
 			return ((nextSlice.length() == sliceSize) ||
@@ -209,7 +209,7 @@ public class Sequence extends PrototypeModelObject {
 		public String next() {
 
 			if (!nextIsSet) {
-				setNextSlizePoints();
+				setNextSlize();
 			}
 			
 			curPos = testPoint.getPos();
@@ -229,7 +229,7 @@ public class Sequence extends PrototypeModelObject {
 	}
 
 	/** The instance's type of sequence (nucleotide or amino acid) */
-	private SequenceType sequenceType = sequenceType.TYPE_UNKNOWN;
+	private SequenceType sequenceType = SequenceType.TYPE_UNKNOWN;
 
 	/** The model it belongs to */
 	private Model model;
@@ -238,7 +238,7 @@ public class Sequence extends PrototypeModelObject {
 	private String sequence;
 
 	/** The annotations array */
-	private Collection<Annotation> annotations = new ArrayList<>();
+	private Collection<Annotation> annotations = new ArrayList();
 
 	/** 
 	 * Returns an iterator for the annotations annotating the
@@ -298,7 +298,7 @@ public class Sequence extends PrototypeModelObject {
 		if (p.getPos() % 2 == 0) {
 			throw new StringIndexOutOfBoundsException(
 					"The characters are located at odd positions," +
-					"invalid %n position for character".format(p.getPos()));
+					"invalid " + p.getPos() + " position for character");
 		} else if (p.annotatesObject(this) == false) {
 			throw new IllegalArgumentException(
 					"The point does not annotate this sequence.");

@@ -2,7 +2,7 @@ package model.topologies;
 
 import model.Model;
 
-class Segment extends Singularity {
+public class Segment extends Singularity {
 
 	protected static int maxPoints = 2;
 
