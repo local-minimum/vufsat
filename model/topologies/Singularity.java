@@ -1,12 +1,11 @@
-package model;
+package model.topologies;
 
 import model.Model;
+import model.point.Point;
 
-class Singularity<O> extends AbstractTopology<O> {
+class Singularity<O> extends AbstractTopology {
 
-	private static int maxPoints = 1;
-
-	private int numberOfChildTopologies = 0;
+	protected static int maxPoints = 1;
 
 	public Singularity(Model m) {
 

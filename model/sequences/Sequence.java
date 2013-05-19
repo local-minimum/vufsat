@@ -1,5 +1,5 @@
 
-package model;
+package model.sequence;
 
 import java.util.*;
 import java.lang.Math;
@@ -7,7 +7,7 @@ import java.lang.Math;
 import model.annotation.Annotation;
 import model.modelobject.PrototypeModelObject;
 import model.point.Point;
-import model.topologies.Singularity
+import model.topologies.Singularity;
 import model.Model;
 
 public class Sequence extends PrototypeModelObject {
@@ -72,9 +72,9 @@ public class Sequence extends PrototypeModelObject {
 
 			return readingFrame;
 		}
-	]
+	}
 
-	class SequenceWalker implements Iterator {
+	class SequenceWalker implements Iterator<String> {
 
 		/** Walking distance each iteration */
 		private int step = 2;
@@ -91,57 +91,138 @@ public class Sequence extends PrototypeModelObject {
 		/** The starting point */
 		private int startPos = 1;
 
-		/** The next postion as a point*/
-		private Point nextPos;
-		//private Integer nextPos = new Integer();
+		/** A point to test postions with */
+		private Point testPoint;
+		
+		/** Slice String Builder. */
+		private StringBuilder nextSlice;
 
-		private void initNextPoint() {
-
-			Orphan top = new Orphan();
-			nextPoint = new Point(Sequence, top, 1);
-		}
+		/** Says if next has been set */
+		private boolean nextIsSet = false;
 
 		SequenceWalker(int pos) {
-			this.pos = pos;
-			this.startPos = pos;
-			initNextPoint();
+			setStartPos(pos);
+			this.nextSlize = new StringBuilder(this.sliceSize);
+			initTestPoint();
 		}
 
 		SequenceWalker(int pos, int step) {
+			setStartPos(pos);
+			this.nextSlize = new StringBuilder(this.sliceSize);
+			setStep(step);
+			initTestPoint();
+		}
+
+		SequenceWalker(int pos, int step, int sliceSize, 
+				boolean allowIncomplete) {
+			setStep(step);
+			setStartPos(pos);
+			if (sliceSize < 1) {
+				throw new IllegalArgumentException("Slices must be positive");
+			}
+			this.sliceSize = sliceSize;
+			this.allowIncomplete = allowIncomplete;
+			this.nextSlize = new StringBuilder(this.sliceSize);
+
+			initTestPoint();
+
+		}
+
+		/** Helper method for constructor to init the testPoint */
+		private void initTestPoint() {
+
+			Orphan top = new Orphan();
+			testPoint = new Point(Sequence, top, 1, step);
+		}
+
+
+		/** Helper method that verifies constructor start positions. */
+		private void setStartPos(int pos){
+			if (pos % 2 != 1) {
+				throw new IllegalArgumentException(
+						"Positions must be on (odd), not between (even)");
+			}
 			this.pos = pos;
 			this.startPos = pos;
 
-			if (step == 0) {
-				throw new IllegalArgumentException("Steps must be non-zero");
+		}
+
+		/** Helper method that verifies constructor step size. */
+		private void setStep(int step) {
+
+			if (step == 0 || step % 2 != 0) {
+				throw new IllegalArgumentException(
+						"Steps must be even non-zero values");
 			}
 			this.step = step;
 
-			initNextPoint();
+		}
+
+		/**
+		 * Produces the next slice.
+		 *
+		 * A slice is set, even if not all conditions are met.
+		 * The method also lets the iterator know it has calculated
+		 * the next iteration thing so it doesn't have to be done twice
+		 */
+		private void setNextSlize() {
+
+			boolean foundProblem = false;
+			int prevPos = curPos;
+
+			nextSlice.delete(0, nextSlice.length());
+
+			foundProblem = !testPoint.setPos(curPos + step);
+
+			if (!foundProblem) {
+				for (int i = 0; i < sliceSize; i++) {
+					foundProblem = !testPoint.movePos(1);
+					if (foundProblem ||
+							testPoint.getPos() == startPos ||
+							((!testPoint.getDidWrap()) && (
+								(testPoint.getPos() > startPos) !=
+								(prevPos > startPos)))){
+
+						break;
+
+					} else {
+						nextSlice.append(Sequence.getCharAt(testPoint));
+					}
+					prevPos = curPos.getPos();
+				}
+			}
+
+			nextIsSet = true;
 		}
 
 		public boolean hasNext() {
 
-			nextPos = curPos + step;
-			if (nextPos < 0 &&
-					Sequence.physicalShape.equals(
-						Sequence.PhysicalShape.MODE_LINEAR)) {
+			if (!nextIsSet) {
+				setNextSlizePoints();
+			}
 
-				return false;
-			} else if (nextPos < 0 &&
-					Sequence.physicalShape.equals(
-						Sequence.PhysicalShape.MODE_CIRCULAR)) {
-
-				nextPos = 
+			return ((nextSlice.length() == sliceSize) ||
+					(nextSlice.length() > 0 && allowIncomplete));
 
 		}
 
 		public String next() {
 
+			if (!nextIsSet) {
+				setNextSlizePoints();
+			}
+			
+			curPos = testPoint.getPos();
+
+			nextIsSet = false;
+
+			return nextSlice.toString();
+
 		}
 
 		public void remove() {
 
-			throws new UnsupportedOperationException(
+			throw new UnsupportedOperationException(
 					"Removing not allowed");
 
 		}
@@ -149,9 +230,6 @@ public class Sequence extends PrototypeModelObject {
 
 	/** The instance's type of sequence (nucleotide or amino acid) */
 	private SequenceType sequenceType = sequenceType.TYPE_UNKNOWN;
-
-	/** The instance's physical shape type (cirular or linear) */
-	private PhysicalShape physicalShape = PhysicalShape.MODE_LINEAR;
 
 	/** The model it belongs to */
 	private Model model;
@@ -173,12 +251,25 @@ public class Sequence extends PrototypeModelObject {
 		return annotations.iterator();
 	}
 
+	public Iterator<String> getSequenceWalker(int pos) {
+		return new SequenceWalker(pos);
+	}
+
+	public Iterator<String> getSequenceWalker(int pos, int stepSize) {
+		return new SequenceWalker(pos, stepSize);
+	}
+
+	public Iterator<String> getSequenceWalker(int pos, int stepSize,
+			int sliceSize, boolean allowIncomplete) {
+		return new SequenceWalker(pos, stepSize, sliceSize, allowIncomplete);
+	}
+
 	/**
 	 * Returns the size in model-space.
 	 *
-	 * If the sequence is of type <code>PhysicalShape.MODE_LINEAR</code>
+	 * If the sequence is of type <code>PhysicalShape.SHAPE_LINEAR</code>
 	 * it is considered to have <i>inbetween</i>-positions both before
-	 * and after the sequence. For <code>PhysicalShape.MODE_CIRCULAR</code>
+	 * and after the sequence. For <code>PhysicalShape.SHAPE_CIRCULAR</code>
 	 * before and after is the same logical position. So for that reason,
 	 * a linear sequence is one longer.
 	 *
@@ -186,8 +277,34 @@ public class Sequence extends PrototypeModelObject {
 	 * 			The size
 	 */
 	public int getSize() {
-		int val = physicalShape.equals(PhysicalShape.MODE_LINEAR) ? 1: 0;
+		int val = getShape().equals(PhysicalShape.SHAPE_LINEAR) ? 1: 0;
 		return sequence.length() * 2 + val;
 	}
 
+	/**
+	 * Returns character at the position that a point is pointing at.
+	 *
+	 * Note that only point pointing at <i>On</i> positions are allowed
+	 *
+	 * @param p
+	 * 			A <code>Point</code> that annotates present sequence
+	 * @return
+	 * 			Character at the <code>Point</code>s position.
+	 */
+	public char getCharAt(Point p) {
+
+		int pos = (int) p.getPos() / 2;
+
+		if (p.getPos() % 2 == 0) {
+			throw new StringIndexOutOfBoundsException(
+					"The characters are located at odd positions," +
+					"invalid %n position for character".format(p.getPos()));
+		} else if (p.annotatesObject(this) == false) {
+			throw new IllegalArgumentException(
+					"The point does not annotate this sequence.");
+		}
+
+		return sequence.charAt(pos);
+
+	}
 }

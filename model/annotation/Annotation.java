@@ -3,7 +3,7 @@
  *
  */
 
-package model;
+package model.annotation;
 
 import java.util.*;
 
@@ -71,7 +71,7 @@ interface Annotation {
 	 * @return
 	 * 			All topologies
 	 */
-	public ArrayList<topologies> getAllTopologies();
+	public ArrayList<Topology> getAllTopologies();
 
 	/**
 	 * setAnnotation

@@ -1,17 +1,11 @@
 
-package model;
+package model.topologies;
 
 import java.util.*;
 import model.point.Point;
 import model.Model;
 
-
-interface Topology<O> {
-
-	/**
-	 * Constructor should register topology to the model
-	 */
-	public Topology(Model m);
+public interface Topology<O> {
 
 	/**
 	 * Get topology-children iterator
@@ -25,7 +19,7 @@ interface Topology<O> {
 	 * Get points iterator
 	 *
 	 * @return
-	 * 			Iterator that goes over the topologies
+	 * 			Iterator that goes over the points
 	 */
 	public Iterator<Point> getPointIterator();
 

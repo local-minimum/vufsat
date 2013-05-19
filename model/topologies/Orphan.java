@@ -1,12 +1,14 @@
-package model;
+package model.topologies;
 
-class Orphan<O> extends AbstractTopology<O> {
+class Orphan extends AbstractTopology {
 
 	/**
 	 * As the super constructor registers the tolology at the model
 	 * this constructor should not invoke super
 	 */
-	public Orphan();
+	public Orphan() {
+
+	}
 
 }
 

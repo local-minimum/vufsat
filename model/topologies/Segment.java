@@ -1,11 +1,10 @@
-package model;
+package model.topologies;
 
 import model.Model;
 
-class Segment extends Singulariy {
+class Segment extends Singularity {
 
-	@Overrides
-	private static int maxPoints = 2;
+	protected static int maxPoints = 2;
 
 	public Segment(Model m) {
 

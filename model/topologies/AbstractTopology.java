@@ -1,17 +1,19 @@
 
-package model;
+package model.topologies;
 
 import java.util.*;
-import model.Model
+import model.Model;
+import model.point.Point;
+import model.modelobject.ModelObject;
 
-abstract class AbstractTopology<O> implements Topology<O> {
+abstract class AbstractTopology implements Topology<ModelObject> {
 
-	private String caption = "";
+	protected String caption = "";
 
-	private Collection<Topology> childTopologies = new ArrayList(1);
-	private Collection<Point> points = new ArrayList(1);
+	protected Collection<Topology> childTopologies = new ArrayList(1);
+	protected Collection<Point> points = new ArrayList(1);
 
-	private Model model;
+	protected Model model;
 
 	public AbstractTopology(Model m) {
 
@@ -30,13 +32,13 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	}
 
 	@Override
-	public Iterator<Point> getPointIterator(O obj) {
+	public Iterator<Point> getPointIterator(ModelObject target) {
 
-		new Collection<Point> filteredPoints = new ArrayList(1);
+		Collection<Point> filteredPoints = new ArrayList(1);
 
-		for (new point: points) {
+		for (Point point: points) {
 
-			if (point.annotatesObject(obj)) {
+			if (point.annotatesObject(target)) {
 				filteredPoints.add(point);
 			}
 		}
@@ -45,17 +47,18 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	}
 
 	@Override
-	public Iterator<Point> getPointAt(O target, int pos) {
+	public Iterator<Point> getPointAt(ModelObject target, int pos) {
 
-		new Collection<Point> filteredPoints = new ArrayList(1);
+		Collection<Point> filteredPoints = new ArrayList(1);
 
-		for (new point: points) {
+		for (Point point: points) {
 
-			if (point.annotatesObject(obj) && (paint.getPos() == pos)) {
+			if (point.annotatesObject(target) && (point.getPos() == pos)) {
 
 				filteredPoints.add(point);
 			}
 
+		}
 		return filteredPoints.iterator();
 
 	}
@@ -79,7 +82,7 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	public boolean addTopology(Topology top) {
 
 		//Defualt behaviour is to allow 
-		return topologies.add(top);
+		return childTopologies.add(top);
 
 	}
 
@@ -87,7 +90,7 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	public boolean removeTopology(Topology top) {
 
 		//Defualt behaviour is to allow 
-		return topologies.remove(top);
+		return childTopologies.remove(top);
 
 	}
 
@@ -108,9 +111,16 @@ abstract class AbstractTopology<O> implements Topology<O> {
 	@Override
 	public boolean allowMove(Point p, int pos) {
 
+		/* CHECKING OF WRAPPING IS DONE BETWEEN THE POINT AND TARGET
+		 * THIS PART SHOULD ONLY CHECK IF THE TOPLOGY HAS ANY INTERNAL
+		 * RESTRICTIONS
 		int wrappedPos = p.checkWarp(pos);
 		ModelObject target = p.getTarget();
-
+		
+		return (wrappedPos == pos || 
+				target.getShape().equals(
+					ModelObject.PhysicalShape.SHAPE_CIRCULAR));
+		*/
 
 		return true;
 	}

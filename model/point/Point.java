@@ -14,7 +14,7 @@
  * the view needs to update the positions.
  */
 
-package model;
+package model.point;
 
 import java.util.*;
 import model.topologies.Topology;
@@ -23,13 +23,20 @@ import model.modelobject.ModelObject;
 /**
  * Point are the stuff that marks things
  */
-final public class Point {
+final public class Point { 
 
 
 	private Topology topology;
 	private ModelObject target;
+
+	/** The position. */
 	private int pos;
+
+	/** The size of stepping. */
 	private int stepSize = 2;
+
+	/** If last positioning of any type involved wrapping. */
+	private boolean didWrap = false;
 	
 	/**
 	 * Alternate constructor that also places
@@ -68,10 +75,10 @@ final public class Point {
 		this.topology = top;
 		this.pos = pos;
 		if (stepSize < 1) {
-			throws new IllegalArgumentException(
+			throw new IllegalArgumentException(
 					"Negative stepSize not allowed");
 		} else if (stepSize >= target.getSize()) {
-			throws new IllegalArgumentException(
+			throw new IllegalArgumentException(
 					"stepSize larger than target");
 		}
 		this.stepSize = stepSize;
@@ -106,7 +113,7 @@ final public class Point {
 	 * 			If it is inbetween
 	 */
 	public boolean getIsInbetween() {
-		returns ((getPos() % 2) == 0);
+		return ((getPos() % 2) == 0);
 	}
 
 	/**
@@ -142,7 +149,20 @@ final public class Point {
 	}
 
 	/**
-     * Attempts to move position relavely
+	 * Checks if last movement was wrapped
+	 *
+	 * @return
+	 * 			If it was
+	 */
+	public boolean getDidWrap() {
+		return didWrap;
+	}
+
+	/**
+     * Attempts to move point <code>step</code> steps.
+     *
+     * Note that the number of steps are in step units
+     * and that the point internally deals with its stepSize
      *
      * @param step
      * 			The step size of the move
@@ -150,7 +170,7 @@ final public class Point {
      * 			Success-statement
      */
 	public boolean movePos(int step) {
-		return setPos(pos + step);
+		return setPos(pos + stepSize * step);
 	}
 
 	/**
@@ -184,19 +204,25 @@ final public class Point {
 
 		int maxPos = target.getSize();
 
+		didWrap = false;
+
 		//If wrapping
 		if (target.allowWrap()) {
 
 			//Make sure values are positive
 			while (p < 0) {
 				p += maxPos;
+				didWrap = true;
 			}
 
 			//Invoke max overflow wrap
 			if (maxPos > 0 && p >= maxPos) {
 				p = p % maxPos;
+				didWrap = true;
+
 			} else if (maxPos == 0) {
-				p = -1;
+				throw new ArithmeticException(
+						"Wrap check only possible when target has a size");
 			}
 
 		//if not wrapping
