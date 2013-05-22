@@ -6,7 +6,7 @@ import collector.Model;
 import point.Point;
 import modelobject.ModelObject;
 
-abstract class AbstractTopology implements Topology<ModelObject> {
+abstract class AbstractTopology implements Topology {
 
 	protected String caption = "";
 

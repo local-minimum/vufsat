@@ -3,7 +3,7 @@ package topologies;
 import collector.Model;
 import point.Point;
 
-public class Singularity<O> extends AbstractTopology {
+public class Singularity extends AbstractTopology {
 
 	protected static int maxPoints = 1;
 

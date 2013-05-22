@@ -3,8 +3,9 @@ package topologies;
 
 import java.util.*;
 import point.Point;
+import modelobject.ModelObject;
 
-public interface Topology<O> {
+public interface Topology {
 
 	/**
 	 * Get topology-children iterator
@@ -30,7 +31,7 @@ public interface Topology<O> {
 	 * @return
 	 * 			Iterator
 	 */
-	public Iterator<Point> getPointIterator(O target);
+	public Iterator<Point> getPointIterator(ModelObject target);
 
 	/**
 	 * Returns iterator for points that matches a position on target.
@@ -45,7 +46,7 @@ public interface Topology<O> {
 	 * @return
 	 * 			The point matching the position on the annotation target.
 	 */
-	public Iterator<Point> getPointAt(O target, int pos);
+	public Iterator<Point> getPointAt(ModelObject target, int pos);
 
 	/**
 	 * Adds a new point to the Topology.
