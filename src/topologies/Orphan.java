@@ -1,4 +1,4 @@
-package model.topologies;
+package topologies;
 
 
 public class Orphan extends AbstractTopology {

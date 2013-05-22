@@ -1,4 +1,4 @@
-package model.annotation.documentation;
+package annotation.documentation;
 
 public class AnnotationDocumentation {
 

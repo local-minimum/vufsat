@@ -1,14 +1,14 @@
 
-package model.sequence;
+package sequences;
 
 import java.util.*;
 import java.lang.Math;
 
-import model.annotation.Annotation;
-import model.modelobject.PrototypeModelObject;
-import model.point.Point;
-import model.topologies.Orphan;
-import model.Model;
+import annotation.Annotation;
+import modelobject.PrototypeModelObject;
+import point.Point;
+import topologies.Orphan;
+import collector.Model;
 
 public class Sequence extends PrototypeModelObject {
 

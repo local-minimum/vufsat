@@ -1,7 +1,7 @@
 
-package model;
+package collector;
 
-import model.topologies.Topology;
+import topologies.Topology;
 
 public class Model {
 

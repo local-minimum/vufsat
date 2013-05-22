@@ -1,6 +1,6 @@
-package model.topologies;
+package topologies;
 
-import model.Model;
+import collector.Model;
 
 public class Segment extends Singularity {
 

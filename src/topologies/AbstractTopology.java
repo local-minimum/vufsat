@@ -1,10 +1,10 @@
 
-package model.topologies;
+package topologies;
 
 import java.util.*;
-import model.Model;
-import model.point.Point;
-import model.modelobject.ModelObject;
+import collector.Model;
+import point.Point;
+import modelobject.ModelObject;
 
 abstract class AbstractTopology implements Topology<ModelObject> {
 

@@ -1,3 +1,4 @@
 *.class
 outdated/*
 doc/private/*
+/bin

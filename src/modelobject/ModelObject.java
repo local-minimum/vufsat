@@ -1,4 +1,4 @@
-package model.modelobject;
+package modelobject;
 import java.util.*;
 
 public interface ModelObject {

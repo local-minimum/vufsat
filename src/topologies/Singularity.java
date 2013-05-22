@@ -1,7 +1,7 @@
-package model.topologies;
+package topologies;
 
-import model.Model;
-import model.point.Point;
+import collector.Model;
+import point.Point;
 
 public class Singularity<O> extends AbstractTopology {
 

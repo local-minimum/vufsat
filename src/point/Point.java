@@ -14,11 +14,11 @@
  * the view needs to update the positions.
  */
 
-package model.point;
+package point;
 
 import java.util.*;
-import model.topologies.Topology;
-import model.modelobject.ModelObject;
+import topologies.Topology;
+import modelobject.ModelObject;
 
 /**
  * Point are the stuff that marks things

@@ -1,9 +1,9 @@
 
-package model.topologies;
+package topologies;
 
 import java.util.*;
-import model.point.Point;
-import model.Model;
+import point.Point;
+import collector.Model;
 
 public interface Topology<O> {
 

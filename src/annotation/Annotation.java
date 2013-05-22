@@ -3,13 +3,13 @@
  *
  */
 
-package model.annotation;
+package annotation;
 
 import java.util.*;
 
-import model.modelobject.PrototypeModelObject;
-import model.annotation.documentation.AnnotationDocumentation;
-import model.topologies.Topology;
+import modelobject.PrototypeModelObject;
+import annotation.documentation.AnnotationDocumentation;
+import topologies.Topology;
 
 /**
  * Annotation defines the interface for all objects annotating sequences or
