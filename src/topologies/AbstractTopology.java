@@ -10,8 +10,8 @@ abstract class AbstractTopology implements Topology<ModelObject> {
 
 	protected String caption = "";
 
-	protected Collection<Topology> childTopologies = new ArrayList(1);
-	protected Collection<Point> points = new ArrayList(1);
+	protected Collection<Topology> childTopologies = new ArrayList<Topology>(1);
+	protected Collection<Point> points = new ArrayList<Point>(1);
 
 	protected Model model;
 
@@ -38,7 +38,7 @@ abstract class AbstractTopology implements Topology<ModelObject> {
 	@Override
 	public Iterator<Point> getPointIterator(ModelObject target) {
 
-		Collection<Point> filteredPoints = new ArrayList(1);
+		Collection<Point> filteredPoints = new ArrayList<Point>(1);
 
 		for (Point point: points) {
 
@@ -53,7 +53,7 @@ abstract class AbstractTopology implements Topology<ModelObject> {
 	@Override
 	public Iterator<Point> getPointAt(ModelObject target, int pos) {
 
-		Collection<Point> filteredPoints = new ArrayList(1);
+		Collection<Point> filteredPoints = new ArrayList<Point>(1);
 
 		for (Point point: points) {
 

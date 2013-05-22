@@ -16,7 +16,6 @@
 
 package point;
 
-import java.util.*;
 import topologies.Topology;
 import modelobject.ModelObject;
 

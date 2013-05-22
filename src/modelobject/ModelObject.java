@@ -1,5 +1,5 @@
 package modelobject;
-import java.util.*;
+
 
 public interface ModelObject {
 

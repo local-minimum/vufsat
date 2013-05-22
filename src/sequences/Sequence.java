@@ -2,8 +2,6 @@
 package sequences;
 
 import java.util.*;
-import java.lang.Math;
-
 import annotation.Annotation;
 import modelobject.PrototypeModelObject;
 import point.Point;
@@ -238,8 +236,13 @@ public class Sequence extends PrototypeModelObject {
 	private String sequence;
 
 	/** The annotations array */
-	private Collection<Annotation> annotations = new ArrayList();
+	private Collection<Annotation> annotations = new ArrayList<Annotation>();
 
+	public Sequence(Model mod) {
+		
+		model = mod;
+		model.addModelObject(this);
+	}
 	/** 
 	 * Returns an iterator for the annotations annotating the
 	 * sequence.

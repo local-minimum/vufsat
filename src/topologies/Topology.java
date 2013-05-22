@@ -3,7 +3,6 @@ package topologies;
 
 import java.util.*;
 import point.Point;
-import collector.Model;
 
 public interface Topology<O> {
 
