@@ -32,11 +32,11 @@ public interface ModelObject {
 	 * @return
 	 * 			If object is allowing wrapping
 	 */
-	public boolean allowWrap();
+	public boolean getAllowsWrap();
 
 	//public ArrayList<ModelObject> getChildren();
-	public void setUpdatingObject(int id);
-	public void setFinishedUpdatingObject(int id);
+	//public void setUpdatingObject(int id);
+	//public void setFinishedUpdatingObject(int id);
 	public boolean setIdentifier(int id);
 	public boolean setIdentifier();
 	public int getSize();

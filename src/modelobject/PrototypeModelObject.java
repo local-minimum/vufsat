@@ -75,7 +75,7 @@ public abstract class PrototypeModelObject implements ModelObject {
 	 * 			If sequence allows wrap
 	 */
 	@Override
-	public boolean getAllowWrap() {
+	public boolean getAllowsWrap() {
 		return physicalShape.equals(PhysicalShape.SHAPE_CIRCULAR);
 	}
 
@@ -99,8 +99,8 @@ public abstract class PrototypeModelObject implements ModelObject {
 	private void setFreeIdentifier() {
 
 		identifierNext = 0;
-
-		while (identifier.contains(identifierNext) {
+		
+		while (identifiers.contains(identifierNext)) {
 			identifierNext++;
 		}
 

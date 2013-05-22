@@ -207,7 +207,7 @@ final public class Point {
 		didWrap = false;
 
 		//If wrapping
-		if (target.allowWrap()) {
+		if (target.getAllowsWrap()) {
 
 			//Make sure values are positive
 			while (p < 0) {
